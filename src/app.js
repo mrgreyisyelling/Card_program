@@ -3,6 +3,7 @@ const path = require('path');
 const app = express();
 const cardRoutes = require('./routes/cards');
 const nodeRoutes = require('./routes/nodes');
+const boardRoutes = require('./routes/boards'); // Adjust the path if needed
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // Add this line
@@ -17,7 +18,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/cards', cardRoutes);
 app.use('/api/nodes', nodeRoutes);
-
+app.use('/api/boards', boardRoutes);
 
 
 module.exports = app;
