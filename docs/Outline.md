@@ -65,3 +65,12 @@ The idea is that by creating a 'streamlined' communication system - that allows 
 - integrate payment to printer on pickup
 - integrate escrow of payment to delivery
 - integrate payment to node/board owner
+
+
+### test printer and delivery
+- identify local printers to work with
+- identify local delivery persons
+- test system locally
+- find a setup in denver
+- establish a board at ethdenver
+- 

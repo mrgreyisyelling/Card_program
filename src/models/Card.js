@@ -19,7 +19,33 @@ const CardSchema = new mongoose.Schema({
   category: {
       type: String,
       required: false
-  }
+  },
+  content: {
+    type: String,
+    required: false
+  },
+  Node: {
+    type: Schema.Types.ObjectId,
+    required: false,
+    ref: 'Node'
+  },
+  design_template: {
+    type: String,
+    required: false
+  },
+  art_chosen: {
+    type: String,
+    required: false
+  },
+  qr_code_id: {
+    type: String,
+    required: false
+  },
+  cardStatus: {
+    type: String,
+    enum: ['started', 'designed', 'posted', 'printed', 'delivered', 'active', 'inactive'],
+    required: true
+  },
 });
 
 
