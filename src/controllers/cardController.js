@@ -61,6 +61,7 @@ exports.createCard_2 = async (req, res) => {
         const savedCard = await newCard.save();
         res.status(201).json({ message: "Card created", card: savedCard });
     } catch (error) {
+        console.error("Error creating card:", error);
         res.status(500).json({ error: "Failed to create card" });
     }
 };

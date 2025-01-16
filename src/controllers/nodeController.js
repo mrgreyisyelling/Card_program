@@ -1,4 +1,4 @@
-const Node = require('./models/Node');
+const Node = require('../models/Node');
 
 
 exports.createNode = async (req, res) => {

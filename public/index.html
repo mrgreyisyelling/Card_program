@@ -50,7 +50,7 @@
 <body>
     <h1>Testing Forms</h1>
     <h2>Card Creation</h2>
-    <form id="cardForm" action="/create-card" method="POST">
+    <form id="cardForm" action="/api/cards/create-card" method="POST">
         <label for="cardTitle">Card Title</label>
         <input type="text" id="cardTitle" name="title" placeholder="Enter card title" required>
 
@@ -64,7 +64,7 @@
     </form>
 
     <h2>Node Creation</h2>
-    <form id="nodeForm" action="/create-node" method="POST">
+    <form id="nodeForm" action="/api/nodes/create-node" method="POST">
         <label for="nodeName">Node Name</label>
         <input type="text" id="nodeName" name="name" placeholder="Enter node name" required>
 
