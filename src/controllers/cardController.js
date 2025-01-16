@@ -1,4 +1,4 @@
-const Card = require("../models/cardModel");
+const Card = require("../models/Card");
 
 exports.createBlankCard = async (req, res) => {
     try {
@@ -13,7 +13,7 @@ exports.createBlankCard = async (req, res) => {
 
 exports.updateCard = async (req, res) => {
     const { id } = req.params;
-    consts updates = req.body;
+    const updates = req.body;
     try {
         const updatedCard = await Card.findByIdAndUpdate(id, updates, { new: true });
         if(!updatedCard) return res.status(404).json({ error: "Card not found" });
@@ -53,4 +53,17 @@ exports.getAllCards = async (req, res) => {
         res.status(500).json({ error: "Failed to get cards" });
     }
 };
+
+exports.createCard_2 = async (req, res) => {
+    const { title, description, category } = req.body;
+    try {
+        const newCard = new Card({ title, description, category });
+        const savedCard = await newCard.save();
+        res.status(201).json({ message: "Card created", card: savedCard });
+    } catch (error) {
+        res.status(500).json({ error: "Failed to create card" });
+    }
+};
+
+
 
