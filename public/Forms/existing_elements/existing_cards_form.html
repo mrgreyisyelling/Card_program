@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select a Card</title>
+</head>
+<body>
+  <h1>Select a Card</h1>
+  <form action="/select-card" method="POST">
+    <!-- Card Selection -->
+    <label for="cardSelection">Choose a Card:</label>
+    <select id="cardSelection" name="cardSelection" required>
+      <option value="">Select a card</option>
+      <!-- Dynamically populated options -->
+      <option value="card1">Card 1 - Business Card</option>
+      <option value="card2">Card 2 - Event Invitation</option>
+      <option value="card3">Card 3 - Personal Greeting</option>
+    </select><br><br>
+    
+    <!-- Submit -->
+    <button type="submit">Select Card</button>
+  </form>
+
+  <script>
+    // Example of dynamically populating the dropdown with data from an API
+    const cardSelection = document.getElementById('cardSelection');
+
+    async function fetchCards() {
+      try {
+        const response = await fetch('/api/cards'); // Adjust the API endpoint
+        const cards = await response.json();
+        cards.forEach(card => {
+          const option = document.createElement('option');
+          option.value = card.id;
+          option.textContent = `${card.name} - ${card.description}`;
+          cardSelection.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Error fetching cards:', error);
+      }
+    }
+
+    // Load cards when the page loads
+    document.addEventListener('DOMContentLoaded', fetchCards);
+  </script>
+</body>
+</html>

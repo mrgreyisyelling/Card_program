@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select a Node</title>
+</head>
+<body>
+  <h1>Select a Node</h1>
+  <form action="/select-node" method="POST">
+    <!-- Node Selection -->
+    <label for="nodeSelection">Choose a Node:</label>
+    <select id="nodeSelection" name="nodeSelection" required>
+      <option value="">Select a node</option>
+      <!-- Dynamically populated options -->
+      <option value="node1">Node 1 - Main Hub</option>
+      <option value="node2">Node 2 - Satellite Node</option>
+      <option value="node3">Node 3 - Local Node</option>
+    </select><br><br>
+    
+    <!-- Submit -->
+    <button type="submit">Select Node</button>
+  </form>
+
+  <script>
+    // Example of dynamically populating the dropdown with data from an API
+    const nodeSelection = document.getElementById('nodeSelection');
+
+    async function fetchNodes() {
+      try {
+        const response = await fetch('/api/nodes'); // Adjust the API endpoint
+        const nodes = await response.json();
+        nodes.forEach(node => {
+          const option = document.createElement('option');
+          option.value = node.id;
+          option.textContent = `${node.name} - ${node.description}`;
+          nodeSelection.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Error fetching nodes:', error);
+      }
+    }
+
+    // Load nodes when the page loads
+    document.addEventListener('DOMContentLoaded', fetchNodes);
+  </script>
+</body>
+</html>

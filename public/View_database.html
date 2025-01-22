@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Database Entries</title>
+    <script>
+        async function fetchData() {
+            const container = document.getElementById('dataContainer');
+            try {
+                console.log('Fetching data from /api/cards/cards...');
+                const response = await fetch('/api/cards/cards');
+    
+                // Log the status of the response
+                console.log('Response status:', response.status);
+    
+                if (!response.ok) {
+                    console.error('Error fetching data:', response.statusText);
+                    container.innerHTML = `<p>Error: Unable to fetch data. Status: ${response.status} - ${response.statusText}</p>`;
+                    return;
+                }
+    
+                const data = await response.json();
+    
+                console.log('Data received:', data);
+    
+                // Check if data is an empty array or has cards
+                if (!data.cards || data.cards.length === 0) {
+                    container.innerHTML = `<p>No cards found in the database.</p>`;
+                    return;
+                }
+    
+                data.cards.forEach(item => {
+                    const entry = document.createElement('div');
+                    entry.innerHTML = `
+                        <p><strong>Card ID:</strong> ${item.cardId}</p>
+                        <p><strong>Created At:</strong> ${new Date(item.createdAt).toLocaleString()}</p>
+                        <p><strong>Description:</strong> ${item.description}</p>
+                        <hr>
+                    `;
+                    container.appendChild(entry);
+                });
+            } catch (error) {
+                console.error('Error during fetch:', error);
+                container.innerHTML = `<p>Error: Unable to fetch data. Please check the console for details.</p>`;
+            }
+        }
+    
+        window.onload = fetchData;
+    </script>
+    
+</head>
+<body>
+    <h1>Database Entries</h1>
+    <div id="dataContainer"></div>
+</body>
+</html>

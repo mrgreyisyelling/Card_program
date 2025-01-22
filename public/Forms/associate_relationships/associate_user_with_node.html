@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Associate User with Node</title>
+</head>
+<body>
+  <h1>Associate User with Node</h1>
+  <form action="/associate-user-node" method="POST">
+    <label for="userSelection">Select a User:</label>
+    <select id="userSelection" name="userId" required>
+      <option value="">Select a user</option>
+      <!-- Dynamically populated options -->
+    </select><br><br>
+
+    <label for="nodeSelection">Select a Node:</label>
+    <select id="nodeSelection" name="nodeId" required>
+      <option value="">Select a node</option>
+      <!-- Dynamically populated options -->
+    </select><br><br>
+
+    <button type="submit">Associate User</button>
+  </form>
+</body>
+</html>

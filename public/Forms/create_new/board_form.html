@@ -1,0 +1,67 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create a Board</title>
+</head>
+<body>
+  <h1>Create a Board</h1>
+  <form action="/submit-board" method="POST">
+    <!-- Board Location -->
+    <label for="location">Location:</label>
+    <select id="location" name="location" required>
+      <option value="">Select a location</option>
+      <!-- Dynamically populated options -->
+      <option value="location1">Location 1</option>
+      <option value="location2">Location 2</option>
+    </select><br><br>
+    
+    <label for="address">Address:</label>
+    <input type="text" id="address" name="address" placeholder="Physical address"><br><br>
+    
+    <!-- Owner Information -->
+    <h2>Owner Information</h2>
+    <label for="owner">Owner:</label>
+    <select id="owner" name="owner" required>
+      <option value="">Select an owner</option>
+      <!-- Dynamically populated options -->
+      <option value="owner1">Owner 1</option>
+      <option value="owner2">Owner 2</option>
+    </select><br><br>
+    
+    <!-- Associated Node -->
+    <h2>Associated Node</h2>
+    <label for="node">Node:</label>
+    <select id="node" name="node" required>
+      <option value="">Select a node</option>
+      <!-- Dynamically populated options -->
+      <option value="node1">Node 1</option>
+      <option value="node2">Node 2</option>
+    </select><br><br>
+    
+    <!-- Physical Description -->
+    <h2>Physical Description</h2>
+    <label for="description">Description:</label>
+    <textarea id="description" name="description" rows="4" placeholder="Describe the board's physical appearance"></textarea><br><br>
+    
+    <label for="dimensions">Dimensions:</label>
+    <input type="text" id="dimensions" name="dimensions" placeholder="Width x Height (e.g., 4x6 ft)"><br><br>
+    
+    <label for="material">Material:</label>
+    <input type="text" id="material" name="material" placeholder="e.g., Wood, Metal, Plastic"><br><br>
+    
+    <!-- Additional Information -->
+    <label>
+      <input type="checkbox" name="active" checked> Active Board
+    </label><br><br>
+    
+    <!-- Submit -->
+    <button type="submit">Create Board</button>
+  </form>
+</body>
+</html>

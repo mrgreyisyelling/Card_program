@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create a User</title>
+</head>
+<body>
+  <h1>Create a User</h1>
+  <form action="/submit-user" method="POST">
+    <!-- Basic User Details -->
+    <label for="fullName">Full Name:</label>
+    <input type="text" id="fullName" name="fullName" required><br><br>
+    
+    <label for="email">Email Address:</label>
+    <input type="email" id="email" name="email" required><br><br>
+    
+    <label for="phone">Phone Number:</label>
+    <input type="tel" id="phone" name="phone" required><br><br>
+    
+    <!-- Role Assignment -->
+    <h2>Assign Role</h2>
+    <label>
+      <input type="checkbox" name="rolePrinter"> Printer
+    </label><br>
+    <label>
+      <input type="checkbox" name="roleDelivery"> Delivery Person
+    </label><br><br>
+    
+    <!-- Capabilities -->
+    <h2>Capabilities</h2>
+    <label for="printerType">Printer Type (if applicable):</label>
+    <select id="printerType" name="printerType">
+      <option value="">None</option>
+      <option value="laser">Laser</option>
+      <option value="inkjet">Inkjet</option>
+      <option value="largeFormat">Large Format</option>
+    </select><br><br>
+    
+    <label for="vehicle">Delivery Vehicle (if applicable):</label>
+    <input type="text" id="vehicle" name="vehicle" placeholder="Car, bike, truck"><br><br>
+    
+    <label for="capacity">Capacity:</label>
+    <input type="text" id="capacity" name="capacity" placeholder="Items, weight, etc."><br><br>
+    
+    <!-- Additional Information -->
+    <h2>Additional Information</h2>
+    <label for="serviceAreas">Service Areas:</label>
+    <input type="text" id="serviceAreas" name="serviceAreas" placeholder="Cities, zip codes"><br><br>
+    
+    <label for="availability">Availability:</label>
+    <textarea id="availability" name="availability" rows="2" placeholder="e.g., Weekdays 9-5"></textarea><br><br>
+    
+    <label for="notes">Custom Notes:</label>
+    <textarea id="notes" name="notes" rows="4" placeholder="Additional information or preferences"></textarea><br><br>
+    
+    <!-- Status and Activation -->
+    <label>
+      <input type="checkbox" name="active" checked> Active User
+    </label><br><br>
+    
+    <!-- Submit -->
+    <button type="submit">Create User</button>
+  </form>
+</body>
+</html>

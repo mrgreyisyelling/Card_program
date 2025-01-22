@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create a Card</title>
+</head>
+<body>
+  <h1>Create a Card</h1>
+  <form action="/submit-card" method="POST" enctype="multipart/form-data">
+    <!-- Card Details -->
+    <label for="cardName">Card Name:</label>
+    <input type="text" id="cardName" name="cardName" required><br><br>
+    
+    <label for="description">Description:</label>
+    <textarea id="description" name="description" rows="4"></textarea><br><br>
+    
+    <label for="category">Category:</label>
+    <select id="category" name="category">
+      <option value="business">Business</option>
+      <option value="event">Event</option>
+      <option value="personal">Personal</option>
+    </select><br><br>
+    
+    <label for="tags">Tags:</label>
+    <input type="text" id="tags" name="tags" placeholder="e.g., networking, sale"><br><br>
+    
+    <!-- Front Design -->
+    <h2>Front Design</h2>
+    <label for="frontImage">Front Image:</label>
+    <input type="file" id="frontImage" name="frontImage"><br><br>
+    
+    <label for="frontTitle">Title/Heading:</label>
+    <input type="text" id="frontTitle" name="frontTitle"><br><br>
+    
+    <label for="qrCode">QR Code:</label>
+    <input type="text" id="qrCode" name="qrCode" placeholder="Link or upload"><br><br>
+    
+    <label for="contactInfo">Contact Information:</label>
+    <input type="text" id="contactInfo" name="contactInfo" placeholder="Name, phone, email"><br><br>
+    
+    <!-- Back Design -->
+    <h2>Back Design</h2>
+    <label for="backImage">Back Image:</label>
+    <input type="file" id="backImage" name="backImage"><br><br>
+    
+    <label for="backText">Additional Text:</label>
+    <textarea id="backText" name="backText" rows="4"></textarea><br><br>
+    
+    <label for="logo">Logo/Icon:</label>
+    <input type="file" id="logo" name="logo"><br><br>
+    
+    <!-- Distribution Options -->
+    <h2>Distribution Options</h2>
+    <label>
+      <input type="checkbox" name="onlineDistribution"> Online Posting
+    </label><br>
+    <label>
+      <input type="checkbox" name="physicalDistribution"> Physical Printing & Delivery
+    </label><br><br>
+    
+    <label for="quantity">Quantity:</label>
+    <input type="number" id="quantity" name="quantity" min="1"><br><br>
+    
+    <!-- Payment/Ownership -->
+    <label for="cost">Cost:</label>
+    <input type="number" id="cost" name="cost" step="0.01" placeholder="$"><br><br>
+    
+    <label>
+      <input type="checkbox" name="ownership"> Retain Ownership of Design
+    </label><br><br>
+    
+    <!-- Submit -->
+    <button type="submit">Create Card</button>
+  </form>
+</body>
+</html>

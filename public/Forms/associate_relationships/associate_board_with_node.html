@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Associate Board with Node</title>
+</head>
+<body>
+  <h1>Associate Board with Node</h1>
+  <form action="/associate-board-node" method="POST">
+    <label for="boardSelection">Select a Board:</label>
+    <select id="boardSelection" name="boardId" required>
+      <option value="">Select a board</option>
+      <!-- Dynamically populated options -->
+    </select><br><br>
+
+    <label for="nodeSelection">Select a Node:</label>
+    <select id="nodeSelection" name="nodeId" required>
+      <option value="">Select a node</option>
+      <!-- Dynamically populated options -->
+    </select><br><br>
+
+    <button type="submit">Associate Board</button>
+  </form>
+</body>
+</html>

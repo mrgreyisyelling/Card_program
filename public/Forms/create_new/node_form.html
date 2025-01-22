@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create a Node</title>
+</head>
+<body>
+  <h1>Create a Node</h1>
+  <form action="/submit-node" method="POST">
+    <!-- Node Details -->
+    <label for="nodeName">Node Name:</label>
+    <input type="text" id="nodeName" name="nodeName" required><br><br>
+    
+    <label for="description">Description:</label>
+    <textarea id="description" name="description" rows="4"></textarea><br><br>
+    
+    <!-- Association -->
+    <h2>Associate Node</h2>
+    <label for="location">Associate with Location:</label>
+    <select id="location" name="location" required>
+      <option value="">Select a location</option>
+      <!-- Dynamically populated options -->
+      <option value="location1">Location 1</option>
+      <option value="location2">Location 2</option>
+    </select><br><br>
+    
+    <label for="board">Associate with Board:</label>
+    <select id="board" name="board">
+      <option value="">Select a board</option>
+      <!-- Dynamically populated options -->
+      <option value="board1">Board 1</option>
+      <option value="board2">Board 2</option>
+    </select><br><br>
+    
+    <!-- User Assignment -->
+    <h2>Assign User</h2>
+    <label for="user">Assign User:</label>
+    <select id="user" name="user" required>
+      <option value="">Select a user</option>
+      <!-- Dynamically populated options -->
+      <option value="user1">User 1</option>
+      <option value="user2">User 2</option>
+    </select><br><br>
+    
+    <label for="role">User Role:</label>
+    <select id="role" name="role" required>
+      <option value="manager">Manager</option>
+      <option value="moderator">Moderator</option>
+    </select><br><br>
+    
+    <!-- Additional Options -->
+    <label>
+      <input type="checkbox" name="active" checked> Active Node
+    </label><br><br>
+    
+    <label for="metadata">Custom Metadata:</label>
+    <textarea id="metadata" name="metadata" placeholder="Key:Value pairs, JSON format, etc."></textarea><br><br>
+    
+    <!-- Submit -->
+    <button type="submit">Create Node</button>
+  </form>
+</body>
+</html>

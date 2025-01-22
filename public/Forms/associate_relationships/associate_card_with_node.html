@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Associate Card to Node or Board</title>
+</head>
+<body>
+  <h1>Associate Card to Node or Board</h1>
+  <form action="/associate-card" method="POST">
+    <label for="cardSelection">Select a Card:</label>
+    <select id="cardSelection" name="cardId" required>
+      <option value="">Select a card</option>
+      <!-- Dynamically populated options -->
+    </select><br><br>
+
+    <label for="nodeSelection">Select a Node:</label>
+    <select id="nodeSelection" name="nodeId">
+      <option value="">Select a node</option>
+      <!-- Dynamically populated options -->
+    </select><br><br>
+
+    <label for="boardSelection">Select a Board:</label>
+    <select id="boardSelection" name="boardId">
+      <option value="">Select a board</option>
+      <!-- Dynamically populated options -->
+    </select><br><br>
+
+    <button type="submit">Associate Card</button>
+  </form>
+</body>
+</html>

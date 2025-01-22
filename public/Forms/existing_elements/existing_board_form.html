@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select a Board</title>
+</head>
+<body>
+  <h1>Select a Board</h1>
+  <form action="/select-board" method="POST">
+    <!-- Board Selection -->
+    <label for="boardSelection">Choose a Board:</label>
+    <select id="boardSelection" name="boardSelection" required>
+      <option value="">Select a board</option>
+      <!-- Dynamically populated options -->
+      <option value="board1">Board 1 - Community Board</option>
+      <option value="board2">Board 2 - Event Board</option>
+      <option value="board3">Board 3 - Public Announcement Board</option>
+    </select><br><br>
+    
+    <!-- Submit -->
+    <button type="submit">Select Board</button>
+  </form>
+
+  <script>
+    // Example of dynamically populating the dropdown with data from an API
+    const boardSelection = document.getElementById('boardSelection');
+
+    async function fetchBoards() {
+      try {
+        const response = await fetch('/api/boards'); // Adjust the API endpoint
+        const boards = await response.json();
+        boards.forEach(board => {
+          const option = document.createElement('option');
+          option.value = board.id;
+          option.textContent = `${board.name} - ${board.description}`;
+          boardSelection.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Error fetching boards:', error);
+      }
+    }
+
+    // Load boards when the page loads
+    document.addEventListener('DOMContentLoaded', fetchBoards);
+  </script>
+</body>
+</html>

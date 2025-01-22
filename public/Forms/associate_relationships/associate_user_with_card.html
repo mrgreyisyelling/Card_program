@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Associate User with Card</title>
+</head>
+<body>
+  <h1>Associate User with Card</h1>
+  <form action="/associate-user-card" method="POST">
+    <label for="userSelection">Select a User:</label>
+    <select id="userSelection" name="userId" required>
+      <option value="">Select a user</option>
+      <!-- Dynamically populated options -->
+    </select><br><br>
+
+    <label for="cardSelection">Select a Card:</label>
+    <select id="cardSelection" name="cardId" required>
+      <option value="">Select a card</option>
+      <!-- Dynamically populated options -->
+    </select><br><br>
+
+    <button type="submit">Associate User</button>
+  </form>
+</body>
+</html>

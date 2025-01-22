@@ -47,7 +47,7 @@ exports.deleteCard = async (req, res) => {
 
 exports.getAllCards = async (req, res) => {
     try {
-        const allCards = await Card.findAll();
+        const allCards = await Card.find();
         res.status(200).json({ message: "All Cards", cards: allCards });
     } catch (error) {
         res.status(500).json({ error: "Failed to get cards" });
@@ -66,5 +66,17 @@ exports.createCard_2 = async (req, res) => {
     }
 };
 
+exports.createCardOnSubmit = async (req, res) => {
+    try {
+        // Create a new card entry with the current date and default description
+        const newCard = new Card();
+        await newCard.save();
 
+        console.log(`Card created at: ${new Date().toISOString()}`);
+        res.status(200).send('Card successfully created and logged.');
+    } catch (error) {
+        console.error('Error creating card:', error);
+        res.status(500).send('Error creating card.');
+    }
+};
 

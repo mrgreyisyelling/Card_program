@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Static Front-End for Testing</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: #f4f4f9;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        form {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #ffffff;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, textarea, button, select {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Testing Forms</h1>
+    <h2>Card Creation</h2>
+
+    <form id="templateForm">
+        <label for="templateSelect">Select Template</label>
+        <select id="templateSelect" name="templateSelect">
+            <option value="">Select a template</option>
+            <!-- Options will be populated dynamically -->
+        </select>
+    </form>
+
+    <form id="cardForm" action="/api/cards/create-card" method="POST">
+        <label for="cardTitle">Card Title</label>
+        <input type="text" id="cardTitle" name="title" placeholder="Enter card title" required>
+
+        <label for="cardDescription">Card Description</label>
+        <textarea id="cardDescription" name="description" placeholder="Enter card description" rows="4"></textarea>
+
+        <label for="cardCategory">Card Category</label>
+        <input type="text" id="cardCategory" name="category" placeholder="Enter card category">
+
+        <button type="submit">Create Card</button>
+    </form>
+
+    <h2>Node Creation</h2>
+    <form id="nodeForm" action="/api/nodes/create-node" method="POST">
+        <label for="nodeName">Node Name</label>
+        <input type="text" id="nodeName" name="name" placeholder="Enter node name" required>
+
+        <label for="nodeType">Node Type</label>
+        <input type="text" id="nodeType" name="type" placeholder="Enter node type" required>
+
+        <label for="nodeData">Node Data</label>
+        <textarea id="nodeData" name="data" placeholder="Enter node data (JSON format)" rows="4"></textarea>
+
+        <button type="submit">Create Node</button>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const templateSelect = document.getElementById('templateSelect');
+            const cardTitle = document.getElementById('cardTitle');
+            const cardDescription = document.getElementById('cardDescription');
+            const cardCategory = document.getElementById('cardCategory');
+
+            // Fetch templates from the server
+            const response = await fetch('/api/templates');
+            const templates = await response.json();
+
+            // Populate the template select options
+            templates.forEach(template => {
+                const option = document.createElement('option');
+                option.value = template._id;
+                option.textContent = template.name;
+                templateSelect.appendChild(option);
+            });
+
+            // Update form fields when a template is selected
+            templateSelect.addEventListener('change', async () => {
+                const templateId = templateSelect.value;
+                if (templateId) {
+                    const response = await fetch(`/api/templates/${templateId}`);
+                    const template = await response.json();
+
+                    cardTitle.value = template.name;
+                    cardDescription.value = template.description || '';
+                    cardCategory.value = template.category || '';
+                } else {
+                    cardTitle.value = '';
+                    cardDescription.value = '';
+                    cardCategory.value = '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
