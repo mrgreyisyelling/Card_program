@@ -59,7 +59,9 @@
                     body: JSON.stringify(templateData),
                 });
 
+                console.log('template possted to server',response);
                 const result = await response.json();
+                console.log('Receive json from server:', result);
                 if (response.ok) {
                     alert(`Template created successfully: ${result.templateId}`);
                 } else {

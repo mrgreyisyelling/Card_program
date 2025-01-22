@@ -23,4 +23,4 @@ const websiteSchema = new Schema({
 websiteSchema.plugin(AutoIncrement, { inc_field: 'websiteId' });
 
 
-module.exports = mongoose.model('website', websiteSchema);
+module.exports = mongoose.model('Website', websiteSchema);

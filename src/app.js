@@ -28,8 +28,8 @@ app.use('/api/cards', cardRoutes);
 app.use('/api/nodes', nodeRoutes);
 app.use('/api/boards', boardRoutes);
 app.use('/api/templates', templateRoutes);
-app.use('/api/qr', qrRoutes);
-app.use('/api/website', websiteRoutes);
+app.use('/api/qrs', qrRoutes);
+app.use('/api/websites', websiteRoutes);
 
 module.exports = app;
 

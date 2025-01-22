@@ -3,8 +3,6 @@ const Website = require('../models/Website');
 const QR = require('../models/QR');
 const Card = require('../models/Card');
 
-
-
 // Create a new template
 exports.createTemplate = async (req, res) => {
     try {
@@ -43,6 +41,20 @@ exports.getAllTemplates = async (req, res) => {
     }
 };
 
+// Fetch a single template by ID
+exports.getTemplateById = async (req, res) => {
+    try {
+        const template = await Template.findById(req.params.id)
+            .populate('cardId')
+            .populate('qrCodeId')
+            .populate('websiteId');
+        if (!template) return res.status(404).json({ error: 'Template not found' });
+        res.status(200).json(template);
+    } catch (error) {
+        console.error('Error fetching template:', error.message);
+        res.status(500).json({ error: 'Failed to fetch template' });
+    }
+};
 
 exports.getAllIds = async (req, res) => {
     try {
@@ -61,16 +73,7 @@ exports.getAllIds = async (req, res) => {
     }
 };
 
-// Get a single template by ID
-exports.getTemplateById = async (req, res) => {
-    try {
-        const template = await Template.findById(req.params.id);
-        if (!template) return res.status(404).json({ error: 'Template not found' });
-        res.status(200).json(template);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
+
 
 // Update a template by ID
 exports.updateTemplate = async (req, res) => {
