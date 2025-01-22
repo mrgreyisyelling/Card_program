@@ -1,23 +1,63 @@
 const Template = require('../models/Template');
+const Website = require('../models/Website');
+const QR = require('../models/QR');
+const Card = require('../models/Card');
 
+
+
+// Create a new template
 exports.createTemplate = async (req, res) => {
-    const { name, description, category } = req.body;
     try {
-        const template = new Template({ name, description, category });
-        await template.save();
-        res.status(201).json({ message: "Template created", template });
+        const { cardId, qrCodeId, websiteId } = req.body;
+
+        if (!cardId || !qrCodeId || !websiteId) {
+            return res.status(400).json({ error: 'All fields are required' });
+        }
+
+        const newTemplate = new Template({
+            templateId: Date.now(), // For simplicity, using a timestamp
+            cardId,
+            qrCodeId,
+            websiteId,
+        });
+
+        await newTemplate.save();
+        res.status(201).json({ message: 'Template created successfully', templateId: newTemplate.templateId });
     } catch (error) {
-        res.status(500).json({ error: "Failed to create template" });
+        console.error('Error creating template:', error.message);
+        res.status(500).json({ error: 'Failed to create template' });
     }
 };
 
-// Get all templates
+// Fetch all templates
 exports.getAllTemplates = async (req, res) => {
     try {
-        const templates = await Template.find();
-        res.status(200).json(templates);
+        const templates = await Template.find()
+            .populate('cardId')
+            .populate('qrCodeId')
+            .populate('websiteId');
+        res.status(200).json({ message: 'Templates Retrieved', templates });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error fetching templates:', error.message);
+        res.status(500).json({ error: 'Failed to fetch templates' });
+    }
+};
+
+
+exports.getAllIds = async (req, res) => {
+    try {
+        const cards = await Card.find({}, '_id');
+        const qrs = await QR.find({}, '_id');
+        const websites = await Website.find({}, '_id');
+
+        res.status(200).json({
+            cards: cards.map(card => card._id),
+            qrs: qrs.map(qr => qr._id),
+            websites: websites.map(website => website._id)
+        });
+    } catch (error) {
+        console.error('Error fetching IDs:', error.message);
+        res.status(500).json({ error: 'Failed to fetch IDs' });
     }
 };
 
