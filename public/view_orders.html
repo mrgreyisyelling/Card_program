@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List of Orders</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            text-align: center;
+        }
+        .order {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: #ffffff;
+        }
+        .order p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>All Orders</h1>
+    <div id="orderList"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const orderList = document.getElementById('orderList');
+
+            // Function to fetch and display all orders
+            async function fetchAndDisplayOrders() {
+                try {
+                    const ordersResponse = await fetch('/api/orders');
+                    if (!ordersResponse.ok) {
+                        throw new Error(`HTTP error! status: ${ordersResponse.status}`);
+                    }
+                    const orders = await ordersResponse.json();
+
+                    // Log the response to see what is being returned
+                    console.log('Orders Response:', orders);
+
+                    // Check if orders is an array
+                    if (!Array.isArray(orders)) {
+                        throw new Error('Orders response is not an array');
+                    }
+
+                    console.log('Display html:');
+                    // Display the orders
+                    orderList.innerHTML = '';
+                    orders.forEach(order => {
+                        orderList.innerHTML += `
+                            <div class="order">
+                                <p><strong>Order ID:</strong> ${order._id}</p>
+                                <p><strong>Order Name:</strong> ${order.orderName}</p>
+                                <p><strong>Order Quantity:</strong> ${order.orderQuantity}</p>
+                                <p><strong>Template ID:</strong> ${order.templateId ? order.templateId._id : 'N/A'}</p>
+                                <p><strong>Card ID:</strong> ${order.cardId ? order.cardId._id : 'N/A'}</p>
+                                <p><strong>QR Code ID:</strong> ${order.qrCodeId ? order.qrCodeId._id : 'N/A'}</p>
+                                <p><strong>Website ID:</strong> ${order.websiteId ? order.websiteId._id : 'N/A'}</p>
+                            </div>
+                        `;
+                    });
+                } catch (error) {
+                    console.error('Error fetching orders:', error);
+                    orderList.innerHTML = '<p>Failed to load orders. Please try again later.</p>';
+                }
+            }
+
+            // Initial fetch and display of all orders
+            fetchAndDisplayOrders();
+        });
+    </script>
+</body>
+</html>

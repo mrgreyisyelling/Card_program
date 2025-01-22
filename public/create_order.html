@@ -62,6 +62,23 @@
 
     <div id="templateInfo" class="info"></div>
 
+    <form id="orderForm">
+        <h2>Submit Order</h2>
+        <label for="orderName">Order Name:</label>
+        <input type="text" id="orderName" name="orderName" required>
+        <label for="orderQuantity">Order Quantity:</label>
+        <input type="number" id="orderQuantity" name="orderQuantity" required>
+        <label for="orderCard">Card ID:</label>
+        <input type="text" id="orderCard" name="orderCard" required>
+        <label for="orderQR">QR ID:</label>
+        <input type="text" id="orderQR" name="orderQR" required>
+        <label for="orderWebsite">website ID:</label>
+        <input type="text" id="orderWebsite" name="orderWebsite" required>
+        <button type="submit">Submit Order</button>
+    </form>
+
+    <div id="orderInfo" class="info"></div>
+
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             const templateSelect = document.getElementById('templateSelect');
@@ -85,6 +102,41 @@
             } catch (error) {
                 console.error('Error fetching templates:', error);
                 templateInfo.innerHTML = '<p>Failed to load templates. Please try again later.</p>';
+            }
+
+            // Function to fetch and display all orders
+            async function fetchAndDisplayOrders() {
+                console.log('Fetching all orders...');
+                try {
+                    
+                    const ordersResponse = await fetch('/api/orders');
+                    // console.log('Orders Response:', ordersResponse);
+                    if (!ordersResponse.ok) {
+                        throw new Error(`HTTP error! status: ${ordersResponse.status}`);
+                    }
+                    const orders = await ordersResponse.json();
+                    // console.log('Orders:', orders);
+
+                    // Display the orders
+                    orderInfo.innerHTML = '<h2>All Orders</h2>';
+                    orders.forEach(order => {
+                        orderInfo.innerHTML += `
+                            <div>
+                                <p><strong>Order ID:</strong> ${order._id}</p>
+                                <p><strong>Order Name:</strong> ${order.orderName}</p>
+                                <p><strong>Order Quantity:</strong> ${order.orderQuantity}</p>
+                                <p><strong>Template ID:</strong> ${order.templateId._id}</p>
+                                <p><strong>Card ID:</strong> ${order.cardId._id}</p>
+                                <p><strong>QR Code ID:</strong> ${order.qrCodeId._id}</p>
+                                <p><strong>Website ID:</strong> ${order.websiteId._id}</p>
+                            </div>
+                            <hr>
+                        `;
+                    });
+                } catch (error) {
+                    console.error('Error fetching orders:', error);
+                    orderInfo.innerHTML = '<p>Failed to load orders. Please try again later.</p>';
+                }
             }
 
             // Handle form submission
@@ -127,6 +179,9 @@
                             const cardData = await cardResponse.json();
                             const card = cardData.card; // Access the card property
                             console.log('Card Data:', card);
+                            document.getElementById('orderCard').value = card._id;
+                            // document.getElementById('orderQR').value = qr._id;
+                            // document.getElementById('orderWebsite').value = card._id;
                             console.log(`Card Info:\nID: ${card._id}\nCreatedAt: ${card.createdAt}\nDescription: ${card.description}`);
                         } catch (error) {
                             console.error('Error fetching card information:', error);
@@ -145,6 +200,7 @@
                             console.log('QR Data:', qrData);
                             const qr = qrData.QR; // Access the card property
                             console.log('QR Data:', qr);
+                            document.getElementById('orderQR').value = qr._id;
                             console.log(`qr Info:\nID: ${qr._id}\nCreatedAt: ${qr.createdAt}\nDescription: ${qr.description}`);
 
                         } catch (error) {
@@ -166,6 +222,7 @@
                             console.log('website Data:', websiteData);
                             const website = websiteData.Website; // Access the card property
                             console.log('website Data:', website);
+                            document.getElementById('orderWebsite').value = website._id;
                             console.log(`website Info:\nID: ${website._id}\nCreatedAt: ${website.createdAt}\nDescription: ${website.description}`);
 
 
@@ -178,6 +235,58 @@
                     templateInfo.innerHTML = '<p>Failed to load template information. Please try again later.</p>';
                 }
             });
+        });
+
+        document.getElementById('orderForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const orderName = document.getElementById('orderName').value;
+            const orderQuantity = document.getElementById('orderQuantity').value;
+            const templateId = document.getElementById('templateSelect').value;
+
+            if (!templateId) {
+                alert('Please select a template before submitting the order.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/templates/${templateId}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const template = await response.json();
+
+                const orderData = {
+                    orderName,
+                    orderQuantity,
+                    templateId,
+                    cardId: template.cardId._id,
+                    qrCodeId: template.qrCodeId._id,
+                    websiteId: template.websiteId._id
+                };
+
+                const orderResponse = await fetch('/api/orders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(orderData)
+                });
+
+                if (!orderResponse.ok) {
+                    throw new Error(`HTTP error! status: ${orderResponse.status}`);
+                }
+
+                const result = await orderResponse.json();
+                console.log(`Order submitted successfully! Order ID: ${result.orderId}`);
+                // Fetch and display all orders
+                //fetchAndDisplayOrders();
+            } catch (error) {
+                console.error('Error submitting order:', error);
+                alert('Failed to submit order. Please try again later.');
+            }
+
+            // Initial fetch and display of all orders
+            // fetchAndDisplayOrders();
         });
     </script>
 </body>

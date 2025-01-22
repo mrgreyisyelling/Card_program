@@ -7,6 +7,7 @@ const nodeRoutes = require('./routes/nodes');
 const boardRoutes = require('./routes/boards'); // Adjust the path if needed
 const templateRoutes = require('./routes/templates'); // Adjust the path if needed
 const websiteRoutes = require('./routes/website');
+const ordersRoutes = require('./routes/orders'); // Adjust the path if needed
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // Add this line
@@ -30,6 +31,7 @@ app.use('/api/boards', boardRoutes);
 app.use('/api/templates', templateRoutes);
 app.use('/api/qrs', qrRoutes);
 app.use('/api/websites', websiteRoutes);
+app.use('/api/orders', ordersRoutes);
 
 module.exports = app;
 
