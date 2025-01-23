@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Order</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: #f4f4f9;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        form {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #ffffff;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        select, button {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .info {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Select an Order</h1>
+    <form id="orderForm">
+        <label for="orderSelect">Choose an Order:</label>
+        <select id="orderSelect" name="orderId" required>
+            <option value="">Select an order</option>
+        </select>
+        <button type="submit">View Order Details</button>
+    </form>
+
+    <div id="orderDetails" class="info"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const orderSelect = document.getElementById('orderSelect');
+            const orderDetails = document.getElementById('orderDetails');
+
+            // Fetch the list of orders
+            try {
+                const response = await fetch('/api/orders');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const orders = await response.json();
+
+                // Populate the dropdown with orders
+                orders.forEach(order => {
+                    const option = document.createElement('option');
+                    option.value = order._id;
+                    option.textContent = `${order.orderName} (${order._id})`;
+                    orderSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error fetching orders:', error);
+                orderDetails.innerHTML = '<p>Failed to load orders. Please try again later.</p>';
+            }
+
+            // Handle form submission
+            document.getElementById('orderForm').addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const orderId = orderSelect.value;
+
+                if (!orderId) {
+                    orderDetails.innerHTML = '<p>Please select an order.</p>';
+                    return;
+                }
+
+                // Fetch the selected order's information
+                try {
+                    const response = await fetch(`/api/orders/${orderId}`);
+                    console.log('Response status:', response.status);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const order = await response.json();
+                    console.log('Order details:', order);
+
+                    // Fetch related data
+                    const [cardResponse, qrResponse, websiteResponse] = await Promise.all([
+                        fetch(`/api/cards/${order.cardId._id}`),
+                        fetch(`/api/qrs/${order.qrCodeId._id}`),
+                        fetch(`/api/websites/${order.websiteId._id}`)
+                    ]);
+                    
+                    if (!cardResponse.ok || !qrResponse.ok || !websiteResponse.ok) {
+                        throw new Error('Error fetching related data');
+                    }
+
+                    const cardData = await cardResponse.json();
+                    const qrCodeData = await qrResponse.json();
+                    const websiteData = await websiteResponse.json();
+
+                    // Function to display object details
+                    const displayObjectDetails = (obj) => {
+                        console.log('Displaying object details:', obj);
+                        const firstKey = Object.keys(obj)[1];
+                        console.log('First key:', firstKey);
+                        const firstValue = obj[firstKey];
+                        return Object.entries(firstValue).map(([key, value]) => {
+                            return `<p><strong>${key}:</strong> ${value}</p>`;
+                        }).join('');
+                    };
+
+                    // Display the order information
+                    orderDetails.innerHTML = `
+                        <h2>Order Details</h2>
+                        <p><strong>Order ID:</strong> ${order._id}</p>
+                        <p><strong>Order Name:</strong> ${order.orderName}</p>
+                        <p><strong>Order Quantity:</strong> ${order.orderQuantity}</p>
+                        <p><strong>Template ID:</strong> ${order.templateId ? order.templateId._id : 'N/A'}</p>
+                        <p><strong>Card ID:</strong> ${order.cardId ? order.cardId._id : 'N/A'}</p>
+                        <p><strong>QR Code ID:</strong> ${order.qrCodeId ? order.qrCodeId._id : 'N/A'}</p>
+                        <p><strong>Website ID:</strong> ${order.websiteId ? order.websiteId._id : 'N/A'}</p>
+                        <p id="orderStatus"><strong>Status:</strong> ${order.status}</p>
+                        <h3>Card Details</h3>
+                        ${displayObjectDetails(cardData)}
+                        <h3>QR Code Details</h3>
+                        ${displayObjectDetails(qrCodeData)}
+                        <h3>Website Details</h3>
+                        ${displayObjectDetails(websiteData)}
+                        <button id="updateStatusButton">Set Status to Processing</button>
+                    `;
+
+                    // Add event listener to the update status button
+                    document.getElementById('updateStatusButton').addEventListener('click', async () => {
+                        try {
+                            const updateResponse = await fetch(`/api/orders/${orderId}/status`, {
+                                method: 'PUT',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({ status: 'Processing' })
+                            });
+
+                            if (!updateResponse.ok) {
+                                throw new Error(`HTTP error! status: ${updateResponse.status}`);
+                            }
+
+                            const updatedOrder = await updateResponse.json();
+                            alert(`Order status updated to: ${updatedOrder.status}`);
+
+                            // Update the displayed status
+                            document.getElementById('orderStatus').innerHTML = `<strong>Status:</strong> ${updatedOrder.status}`;
+                        } catch (error) {
+                            console.error('Error updating order status:', error);
+                            alert('Failed to update order status. Please try again later.');
+                        }
+                    });
+                } catch (error) {
+                    console.error('Error fetching order details:', error);
+                    orderDetails.innerHTML = '<p>Failed to load order details. Please try again later.</p>';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

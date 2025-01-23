@@ -29,9 +29,11 @@ const orderSchema = new mongoose.Schema({
         ref: 'Website',
         required: true
     },
-    submissionTime: {
-        type: Date,
-        default: Date.now
+    status: {
+        type: String,
+        required: true,
+        enum: ['Pending', 'Processing', 'Completed', 'Cancelled'],
+        default: 'Pending'
     }
 });
 
