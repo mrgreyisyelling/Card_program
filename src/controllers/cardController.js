@@ -70,10 +70,12 @@ exports.createCardOnSubmit = async (req, res) => {
     try {
         // Create a new card entry with the current date and default description
         const newCard = new Card();
+        newCard.description = "Basic Business Card - Model v1";
         await newCard.save();
 
         console.log(`Card created at: ${new Date().toISOString()}`);
-        res.status(200).send('Card successfully created and logged.');
+        const cardFromDB = await Card.findById(newCard._id);
+        res.status(200).json({ message: "Card created and retrieved", card: cardFromDB });
     } catch (error) {
         console.error('Error creating card:', error);
         res.status(500).send('Error creating card.');

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Associate QR Code</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: #f4f4f9;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        form {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #ffffff;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        select, input, button {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .info {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Associate QR Code</h1>
+    <form id="orderForm">
+        <label for="orderSelect">Choose an Order:</label>
+        <select id="orderSelect" name="orderId" required>
+            <option value="">Select an order</option>
+        </select>
+        <button type="submit">View Order Details</button>
+    </form>
+
+    <div id="orderDetails" class="info"></div>
+
+    <form id="updateQrUrlForm" style="display:none;">
+        <button type="submit">Update QR Code URL</button>
+    </form>
+
+    <form id="updateRedirectUrlForm" style="display:none;">
+        <label for="redirectUrl">Enter Redirect URL:</label>
+        <input type="url" id="redirectUrl" name="redirectUrl" required>
+        <button type="submit">Update Redirect URL</button>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const orderSelect = document.getElementById('orderSelect');
+            const orderDetailsDiv = document.getElementById('orderDetails');
+            const updateQrUrlForm = document.getElementById('updateQrUrlForm');
+            const updateRedirectUrlForm = document.getElementById('updateRedirectUrlForm');
+            const baseUrl = 'https://yourdomain.com/api/QR_routing';
+            // Fetch the list of orders being processed
+            try {
+                console.log('Fetching orders with status "Processing"...');
+                const response = await fetch('/api/orders/status/processing');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const orders = await response.json();
+                console.log('Processing Orders:', orders);
+
+                
+                // Populate the dropdown with orders
+                orders.forEach(order => {
+                    const option = document.createElement('option');
+                    option.value = order._id;
+                    option.textContent = `${order.orderName} (${order._id})`;
+                    orderSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error fetching orders:', error);
+                orderDetailsDiv.innerHTML = '<p>Failed to load orders. Please try again later.</p>';
+            }
+
+            // Handle form submission to view order details
+            document.getElementById('orderForm').addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const orderId = orderSelect.value;
+                console.log('Selected Order ID:', orderId);
+
+                if (!orderId) {
+                    orderDetailsDiv.innerHTML = '<p>Please select an order.</p>';
+                    return;
+                }
+
+                console.log('Fetching order details...');
+                // Fetch the selected order's information
+                try {
+                    const response = await fetch(`/api/orders/${orderId}`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const order = await response.json();
+                    console.log('Order Details:', order);
+
+                    
+                    // Fetch related data
+                    const [cardResponse, qrResponse, websiteResponse] = await Promise.all([
+                        fetch(`/api/cards/${order.cardId._id}`),
+                        fetch(`/api/qrs/${order.qrCodeId._id}`),
+                        fetch(`/api/websites/${order.websiteId._id}`)
+                    ]);
+
+                    console.log('Related Data:', { card: cardResponse, qrCode: qrResponse, website: websiteResponse });
+
+                    if (!cardResponse.ok || !qrResponse.ok || !websiteResponse.ok) {
+                        console.error('Error fetching related data');
+                        throw new Error('Error fetching related data');
+                    }
+
+                    
+                    const card_2 = await cardResponse.json();
+                    const qrCode_2 = await qrResponse.json();
+                    const website_2 = await websiteResponse.json();
+
+                    card = card_2.card;
+                    qrCode = qrCode_2.QR;
+                    website = website_2.Website;
+                    
+                    console.log('Card:', card);
+                    console.log('QR Code:', qrCode);
+                    console.log('Website:', website);   
+
+                    // Display the order information
+                    orderDetailsDiv.innerHTML = `
+                        <h2>Order Details</h2>
+                        <p><strong>Order ID:</strong> ${order._id}</p>
+                        <p><strong>Order Name:</strong> ${order.orderName}</p>
+                        <p><strong>Order Quantity:</strong> ${order.orderQuantity}</p>
+                        <p><strong>Template ID:</strong> ${order.templateId ? order.templateId._id : 'N/A'}</p>
+                        <p><strong>Card ID:</strong> ${order.cardId ? order.cardId._id : 'N/A'}</p>
+                        <p><strong>QR Code ID:</strong> ${order.qrCodeId ? order.qrCodeId._id : 'N/A'}</p>
+                        <p><strong>Website ID:</strong> ${order.websiteId ? order.websiteId._id : 'N/A'}</p>
+                        <p><strong>Status:</strong> ${order.status}</p>
+                        <h3>Card Details</h3>
+                        <p><strong>Card Description:</strong> ${card.createdAt}</p>
+                        <p><strong>Card Description:</strong> ${card.description}</p>
+                        <h3>QR Code Details</h3>
+                        <p><strong>Card Description:</strong> ${qrCode.createdAt}</p>
+                        <p><strong>QR Code URL:</strong> ${qrCode.qrCodeUrl}</p>
+                        <p><strong>QR Code Redirect URL:</strong> ${qrCode.qrRedirectUrl}</p>
+                        <h3>Website Details</h3>
+                        <p><strong>Website URL:</strong> ${website.description}</p>
+                    `;
+
+                    // Show the update QR URL form
+                    updateQrUrlForm.style.display = 'block';
+
+                    // Handle QR URL update form submission
+                    updateQrUrlForm.addEventListener('submit', async (event) => {
+                        event.preventDefault();
+
+                        // Generate the QR code URL
+                        const qrCodeUrl = `${baseUrl}/${order._id}`;
+                        console.log('Generated QR Code URL:', qrCodeUrl);
+
+                        // Save the QR code URL to the QR code database
+                        try {
+                            const saveResponse = await fetch(`/api/qrs/update_QRUrl/${order.qrCodeId._id}`, {
+                                method: 'PUT',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({ qrCodeUrl })
+                            });
+
+                            if (!saveResponse.ok) {
+                                throw new Error(`HTTP error! status: ${saveResponse.status}`);
+                            }
+
+                            const savedQrCode = await saveResponse.json();
+                            alert('QR Code URL updated successfully!');
+                            console.log('QR Code saved:', savedQrCode);
+
+                            // Update the displayed QR code URL
+                            orderDetailsDiv.querySelector('p:nth-child(14)').innerHTML = `<strong>QR Code URL:</strong> ${qrCodeUrl}`;
+
+                            // Show the redirect form
+                            updateRedirectUrlForm.style.display = 'block';
+
+                            // Handle redirect form submission
+                            updateRedirectUrlForm.addEventListener('submit', async (event) => {
+                                event.preventDefault();
+                                const redirectUrl = document.getElementById('redirectUrl').value;
+                                console.log('Entered Redirect URL:', redirectUrl);
+
+                                // Submit the redirect URL
+                                try {
+                                    const redirectResponse = await fetch(`/api/qrs/${order.qrCodeId._id}/redirect`, {
+                                        method: 'PUT',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify({ qrRedirectUrl: redirectUrl })
+                                    });
+
+                                    if (!redirectResponse.ok) {
+                                        throw new Error(`HTTP error! status: ${redirectResponse.status}`);
+                                    }
+
+                                    const updatedQrCode = await redirectResponse.json();
+                                    alert('Redirect URL submitted successfully!');
+                                    console.log('Updated QR Code:', updatedQrCode);
+                                } catch (error) {
+                                    console.error('Error submitting redirect URL:', error);
+                                    alert('Failed to submit redirect URL. Please try again later.');
+                                }
+                            });
+                        } catch (error) {
+                            console.error('Error saving QR code URL:', error);
+                            alert('Failed to save QR code URL. Please try again later.');
+                        }
+                     
+                    });
+                } catch (error) {
+                    console.error('Error fetching order details:', error);
+                    orderDetailsDiv.innerHTML = '<p>Failed to load order details. Please try again later.</p>';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

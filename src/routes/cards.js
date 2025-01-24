@@ -10,5 +10,5 @@ router.get("/:id", cardController.getCard);
 
 // router.get("/template:id", cardController.getCard);
 router.post('/submit-action', cardController.createCardOnSubmit);
-router.get("/cards", cardController.getAllCards);
+router.get("/", cardController.getAllCards);
 module.exports = router;

@@ -11,6 +11,8 @@ router.get('/', orderController.getAllOrders);
 // Get a specific order by ID
 router.get('/:id', orderController.getOrderById);
 
+// Get orders with status "Processing"
+router.get('/status/processing', orderController.getProcessingOrders);
 
 // Update order status
 router.put('/:id/status', orderController.updateOrderStatus);

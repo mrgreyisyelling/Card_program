@@ -56,7 +56,15 @@ exports.getOrderById = async (req, res) => {
     }
 };
 
-
+// Get orders with status "Processing"
+exports.getProcessingOrders = async (req, res) => {
+    try {
+        const orders = await Order.find({ status: 'Processing' });
+        res.json(orders);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching processing orders', error });
+    }
+};
 // Update order status
 exports.updateOrderStatus = async (req, res) => {
     try {

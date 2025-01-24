@@ -80,3 +80,55 @@ exports.createQROnSubmit = async (req, res) => {
     }
 };
 
+exports.createQRUrl = async (req, res) => { 
+    try {
+        console.log("Generating QR URL...");
+        const { id } = req.params;
+        const { qrCodeUrl } = req.body;
+
+        console.log(`Received ID: ${id}`);
+        console.log(`Received QR Code URL: ${qrCodeUrl}`);
+
+        // Find the QR by ID
+        const qr = await QR.findById(id);
+        if (!qr) {
+            console.log('QR not found');
+            return res.status(404).json({ error: 'QR not found' });
+        }
+       
+        // Update the qrCodeUrl field
+        qr.qrCodeUrl = qrCodeUrl;
+
+        // Save the changes to the database
+        await qr.save();       
+
+        console.log('QR URL updated successfully');
+        res.status(200).json({ qrCodeUrl });
+    } catch (error) {
+        console.error('Error generating QR URL:', error.message);
+        res.status(500).json({ error: 'Failed to generate QR URL' });
+    }
+}
+exports.updateQRRedirectUrl = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { qrRedirectUrl } = req.body;
+
+        // Find the QR by ID
+        const qr = await QR.findById(id);
+        if (!qr) {
+            return res.status(404).json({ error: 'QR not found' });
+        }
+
+        // Update the qrRedirectUrl field
+        qr.qrRedirectUrl = qrRedirectUrl;
+
+        // Save the changes to the database
+        await qr.save();
+
+        res.status(200).json({ message: 'QR redirect URL updated successfully', qr });
+    } catch (error) {
+        console.error('Error updating QR redirect URL:', error.message);
+        res.status(500).json({ error: 'Failed to update QR redirect URL' });
+    }
+};

@@ -266,3 +266,55 @@ The idea is that by creating a 'streamlined' communication system - that allows 
 1. Refine error handling and logging.
 2. Document the API (e.g., with Swagger or Postman).
 3. Prepare for deployment by setting up a production environment.
+
+
+-----------------
+--------------
+
+# on starting of order
+
+https://docs.google.com/drawings/d/1IeTrPqElG169L1M7dl1a1NTkwQBWkBmiDLCwPU0PTJs/edit
+
+Currently - any order received uses this card template to create the card
+The file is started:
+change the background image
+replace the QR code
+change the copy and typography
+Change the title 
+
+To replace the QR code, use the URL from the website. Go to a QR code generator and create something simple.
+
+So before you can finish the QR and then the card, you need to prototype the website.
+
+You are going to select a template, load the webflow in a new site, publish it, grab the URL
+- go the QR code register, select order number - enter URL
+- URL is produced - use this to create the QR code
+- QR code is produced - use this on the business card.
+
+
+# Layout of Order
+
+
+- Sherin 
+- order #0001
+
+## steps
+- start a new row in the excel spreadsheet
+- load website from template
+  - publish site
+  - get url
+  - register url with qr code redirect for order
+
+
+- Create business card from template
+  - https://docs.google.com/drawings/d/1IeTrPqElG169L1M7dl1a1NTkwQBWkBmiDLCwPU0PTJs/edit
+- register QR code with order
+  - Go to URL
+  - select order
+  - get URL for QR code
+  - go to QR code generator
+    - https://www.qrcode-monkey.com/
+  - Generate QR code
+- Add QR code to business card
+
+- You should a business card template with a functional QR code that points to the staged website.
