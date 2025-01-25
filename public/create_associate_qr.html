@@ -210,9 +210,15 @@
                             orderDetailsDiv.querySelector('p:nth-child(14)').innerHTML = `<strong>QR Code URL:</strong> ${qrCodeUrl}`;
 
                             // Generate and display the QR code image
-                            const qrCodeImageUrl = await QRCode.toDataURL(qrCodeUrl);
-                            qrCodeDisplay.innerHTML = `<img src="${qrCodeImageUrl}" alt="QR Code">`;
-
+                            // Generate and display the QR code image
+                            QRCode.toDataURL(qrCodeUrl, function (err, url) {
+                                if (err) {
+                                    console.error('Error generating QR code:', err);
+                                    alert('Failed to generate QR code. Please try again later.');
+                                    return;
+                                }
+                                qrCodeDisplay.innerHTML = `<img src="${url}" alt="QR Code">`;
+                            });
 
                             // Show the redirect form
                             updateRedirectUrlForm.style.display = 'block';
