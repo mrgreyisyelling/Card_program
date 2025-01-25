@@ -49,6 +49,7 @@
             margin-top: 20px;
         }
     </style>
+     <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 </head>
 <body>
     <h1>Associate QR Code</h1>
@@ -72,12 +73,15 @@
         <button type="submit">Update Redirect URL</button>
     </form>
 
+    <div id="qrCodeDisplay" class="qr-code"></div>
+
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             const orderSelect = document.getElementById('orderSelect');
             const orderDetailsDiv = document.getElementById('orderDetails');
             const updateQrUrlForm = document.getElementById('updateQrUrlForm');
             const updateRedirectUrlForm = document.getElementById('updateRedirectUrlForm');
+            const qrCodeDisplay = document.getElementById('qrCodeDisplay');
             const baseUrl = 'https://yourdomain.com/api/QR_routing';
             // Fetch the list of orders being processed
             try {
@@ -204,6 +208,11 @@
 
                             // Update the displayed QR code URL
                             orderDetailsDiv.querySelector('p:nth-child(14)').innerHTML = `<strong>QR Code URL:</strong> ${qrCodeUrl}`;
+
+                            // Generate and display the QR code image
+                            const qrCodeImageUrl = await QRCode.toDataURL(qrCodeUrl);
+                            qrCodeDisplay.innerHTML = `<img src="${qrCodeImageUrl}" alt="QR Code">`;
+
 
                             // Show the redirect form
                             updateRedirectUrlForm.style.display = 'block';

@@ -7,5 +7,9 @@ router.put("/:id/redirect", qrController.updateQRRedirectUrl);
 router.get("/", qrController.getAllQRs);
 router.get("/:id", qrController.getQR);
 
+// Route to generate a QR code
+router.post('/generate', qrController.generateQRCode);
+
+
 router.put("/updateQRRedirectUrl/:id", qrController.updateQRRedirectUrl);
 module.exports = router;

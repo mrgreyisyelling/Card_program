@@ -1,4 +1,5 @@
 const QR = require("../models/QR");
+const QRCode = require('qrcode');
 
 exports.createBlankQR = async (req, res) => {
     try {
@@ -8,6 +9,28 @@ exports.createBlankQR = async (req, res) => {
         res.status(201).json({ message: "Blank QR created", QR: savedQR });
     } catch (error) {
         res.status(500).json({ error: "Failed to create QR" });
+    }
+};
+
+// Function to generate a QR code
+exports.generateQRCode = async (req, res) => {
+    try {
+        const { orderId, qrCodeUrl } = req.body;
+
+        // Generate the QR code
+        const qrCodeDataUrl = await QRCode.toDataURL(qrCodeUrl);
+
+        // Save the QR code to the database
+        const qr = new QR({
+            orderId,
+            qrCodeUrl,
+            qrCodeDataUrl
+        });
+        await qr.save();
+
+        res.status(201).json({ message: 'QR code generated successfully', qr });
+    } catch (error) {
+        res.status(500).json({ message: 'Error generating QR code', error });
     }
 };
 
